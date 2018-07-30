@@ -10,16 +10,59 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var counterLabel: UILabel!
+    @IBOutlet weak var timerDirectionsSwitch: UISwitch!
+    @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var startButton: UIButton!
+    var timer: Timer?
+    var counter = 0
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        updateCounterLabel()
+        buttonsEnabled(true)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func timerStoppedButton(_ sender: Any) {
+        timer?.invalidate()
+        timer = nil
+        counter = 0
+        updateCounterLabel()
+        buttonsEnabled(true)
     }
 
+    @IBAction func timerStartedButton(_ sender: Any) {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerTickHandler), userInfo: nil, repeats: true)
+        buttonsEnabled(false)
+    }
 
+    func updateCounterLabel() {
+        counterLabel.text = "Counter value: \(counter)"
+    }
+
+    func buttonsEnabled(_ value: Bool) {
+        timerDirectionsSwitch.isEnabled = value
+        startButton.isEnabled = value
+        stopButton.isEnabled = !value
+        switch value {
+        case true:
+            stopButton.alpha = 0.5
+            startButton.alpha = 1.0
+        case false:
+            startButton.alpha = 0.5
+            stopButton.alpha = 1.0
+        }
+    }
+
+    @objc func timerTickHandler() {
+        switch timerDirectionsSwitch.isOn {
+        case true:
+            counter += 1
+            updateCounterLabel()
+        case false:
+            counter -= 1
+            updateCounterLabel()
+        }
+    }
 }
 
