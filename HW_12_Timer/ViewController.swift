@@ -42,27 +42,19 @@ class ViewController: UIViewController {
 
     func buttonsEnabled(_ value: Bool) {
         timerDirectionsSwitch.isEnabled = value
+
         startButton.isEnabled = value
+        startButton.alpha = value ? 1.0 : 0.5
+
         stopButton.isEnabled = !value
-        switch value {
-        case true:
-            stopButton.alpha = 0.5
-            startButton.alpha = 1.0
-        case false:
-            startButton.alpha = 0.5
-            stopButton.alpha = 1.0
-        }
+        stopButton.alpha = value ? 0.5 : 1.0
     }
 
     @objc func timerTickHandler() {
-        switch timerDirectionsSwitch.isOn {
-        case true:
+        if timerDirectionsSwitch.isOn {
             counter += 1
-            updateCounterLabel()
-        case false:
-            counter -= 1
-            updateCounterLabel()
-        }
+        } else { counter -= 1 }
+        updateCounterLabel()
     }
 }
 
